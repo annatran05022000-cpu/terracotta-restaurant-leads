@@ -1,42 +1,27 @@
 {{ define "main" }}
-<div class="container">
-  <div class="masthead">
-    <div class="tagline">Independent B2B Marketing Publication</div>
-    <p style="font-size:0.82rem;font-family:sans-serif;opacity:0.5;margin-top:0.3rem">{{ now.Format "Monday, January 2, 2006" }}</p>
-  </div>
-  {{ $posts := where .Site.RegularPages "Type" "posts" }}
-  <div class="newspaper-grid">
-    <div class="newspaper-col">
-      <h2>Top Story</h2>
-      {{ with index $posts 0 }}
-      <div class="story">
-        <h3><a href="{{ .Permalink }}">{{ .Title }}</a></h3>
-        <p>{{ .Description | default .Summary | truncate 150 }}</p>
-        <div style="font-size:0.78rem;font-family:sans-serif;opacity:0.5;margin-top:0.4rem">{{ .Date.Format "Jan 2, 2006" }}</div>
+<div class="container" style="padding-top:2rem">
+  <h1 class="page-heading">All Articles</h1>
+  <p class="page-sub">{{ .Site.Params.description }}</p>
+  <div class="post-grid" style="margin-top:2rem">
+    {{ range .Pages }}
+    <article class="post-card">
+      <div class="card-thumb" style="background: linear-gradient(135deg, var(--card) 0%, var(--main) 100%);">
+        {{ range first 1 .Params.tags }}<span class="card-category">{{ . }}</span>{{ end }}
       </div>
-      {{ end }}
-      {{ range after 1 (first 3 $posts) }}
-      <div class="story">
-        <h3><a href="{{ .Permalink }}">{{ .Title }}</a></h3>
-        <p style="font-size:0.85rem;opacity:0.75">{{ .Description | default .Summary | truncate 100 }}</p>
+      <div class="card-body">
+        <div class="card-meta">
+          <span>{{ .Date.Format "Jan 2, 2006" }}</span>
+          <span>&middot;</span>
+          <span>{{ .ReadingTime }} min read</span>
+        </div>
+        <h3 class="card-title"><a href="{{ .Permalink }}">{{ .Title }}</a></h3>
+        <p class="card-desc">{{ .Description | default .Summary | truncate 120 }}</p>
       </div>
-      {{ end }}
-    </div>
-    <div class="newspaper-col">
-      <h2>Latest</h2>
-      {{ range after 3 (first 8 $posts) }}
-      <div class="story">
-        <h3><a href="{{ .Permalink }}">{{ .Title }}</a></h3>
-        <div style="font-size:0.75rem;opacity:0.5;font-family:sans-serif">{{ .Date.Format "Jan 2" }}</div>
+      <div class="card-footer">
+        <a href="{{ .Permalink }}" class="card-link">Read more &rarr;</a>
       </div>
-      {{ end }}
-    </div>
-    <div class="newspaper-col">
-      <h2>Topics</h2>
-      {{ range .Site.Taxonomies.tags }}
-      <div class="story"><a href="{{ .Page.Permalink }}">{{ .Page.Title }}</a> <span style="opacity:0.5;font-size:0.82rem">({{ .Count }})</span></div>
-      {{ end }}
-    </div>
+    </article>
+    {{ end }}
   </div>
 </div>
 {{ end }}
